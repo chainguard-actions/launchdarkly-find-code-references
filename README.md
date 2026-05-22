@@ -12,6 +12,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | v2.11.9 | [`v2.11.9`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.11.9) | — |
 | v2.12.0 | [`v2.12.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.12.0) | — |
 | v2.13.0 | [`v2.13.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.13.0) | — |
+| v2.14.0 | [`v2.14.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.14.0) | — |
 
 ## Privacy
 
