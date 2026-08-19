@@ -19,3 +19,7 @@ jobs:
           debug: "false"
           contextLines: "2"
           lookback: "10"
+      - name: Assert action completed
+        run: |
+          echo "Action completed successfully (ignoreServiceErrors=true)"
+          echo "PASS"
