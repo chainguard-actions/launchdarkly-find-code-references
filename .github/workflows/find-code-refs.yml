@@ -1,0 +1,28 @@
+on: [push, workflow_dispatch]
+    
+name: Find LaunchDarkly flag code references
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  launchDarklyCodeReferences:
+    name: LaunchDarkly Code References
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      with:
+        repository: launchdarkly/SupportService
+        fetch-depth: 11
+    - name: LaunchDarkly Code References
+      uses: launchdarkly/find-code-references@3836f3dea1fd3c80bd673cc0541d8bb91d2eed7c # main
+      with:
+        accessToken: ${{ secrets.LD_ACCESS_TOKEN }}
+        debug: true
+        ignoreServiceErrors: true
+        projKey: support-service
+        allowTags: true
+        prune: true

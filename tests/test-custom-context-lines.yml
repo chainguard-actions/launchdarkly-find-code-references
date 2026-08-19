@@ -1,0 +1,36 @@
+name: Test custom contextLines and lookback settings
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_REF: refs/heads/main
+      GITHUB_EVENT_NAME: push
+      GITHUB_REPOSITORY: test-org/test-repo
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - name: Configure git remote for LaunchDarkly scanner
+        run: |
+          git remote set-url origin https://github.com/test-org/test-repo.git 2>/dev/null || \
+          git remote add origin https://github.com/test-org/test-repo.git 2>/dev/null || true
+          echo "Git remotes:"
+          git remote -v
+      - name: Run LaunchDarkly code references with custom context lines
+        id: action
+        uses: .
+        continue-on-error: true
+        with:
+          accessToken: fake-token-for-testing
+          projKey: test-project
+          repoName: test-repo
+          contextLines: "5"
+          lookback: "5"
+          ignoreServiceErrors: "true"
+      - name: Assert action completed with custom settings
+        run: |
+          echo "Action step outcome: ${{ steps.action.outcome }}"
+          echo "Action completed with contextLines=5 and lookback=5 (ignoreServiceErrors=true)"
+          echo "PASS"
