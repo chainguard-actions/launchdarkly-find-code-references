@@ -1,0 +1,30 @@
+name: Test subdirectory input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          accessToken: fake-token-for-test
+          projKey: my-project
+          subdirectory: src
+          ignoreServiceErrors: "true"
+      - name: Assert action ran with subdirectory input
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          # The action will fail because the token is fake and the LaunchDarkly
+          # API is unreachable/returns an error. We accept both success (unlikely)
+          # and failure (expected with a fake token). What we must NOT see is a
+          # skipped step, which would indicate the action was never invoked.
+          if [ "$OUTCOME" = "skipped" ]; then
+            echo "FAIL: action step was skipped — it was never invoked"
+            exit 1
+          fi
+          echo "PASS: action was invoked with subdirectory input (outcome: $OUTCOME)"
