@@ -2,7 +2,6 @@
   "owner": "launchdarkly",
   "repo": "find-code-references",
   "version": "v2.17.0",
-  "path": "docker",
   "commit_sha": "088563c86407b01ad1bc8d9594661b228ed4324d",
   "url": "https://github.com/launchdarkly/find-code-references",
   "policy_sha": "d636be7e43ef829af6e853da6b3c7566db9f72fe",
