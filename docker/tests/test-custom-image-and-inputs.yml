@@ -1,0 +1,53 @@
+name: Test custom docker image and inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install fake docker CLI
+        run: |
+          mkdir -p /tmp/fakebin
+          cat > /tmp/fakebin/docker <<'EOF'
+          #!/bin/bash
+          printf '%s\n' "$@" > /tmp/docker-args.txt
+          {
+            echo "LD_BASE_URI=${LD_BASE_URI:-}"
+            echo "LD_CONTEXT_LINES=${LD_CONTEXT_LINES:-}"
+            echo "LD_ALLOW_TAGS=${LD_ALLOW_TAGS:-}"
+            echo "LD_DEBUG=${LD_DEBUG:-}"
+            echo "LD_IGNORE_SERVICE_ERRORS=${LD_IGNORE_SERVICE_ERRORS:-}"
+            echo "LD_LOOKBACK=${LD_LOOKBACK:-}"
+            echo "LD_PRUNE=${LD_PRUNE:-}"
+            echo "LD_SUBDIRECTORY=${LD_SUBDIRECTORY:-}"
+          } > /tmp/docker-env.txt
+          exit 0
+          EOF
+          chmod +x /tmp/fakebin/docker
+          echo "/tmp/fakebin" >> "$GITHUB_PATH"
+      - id: action
+        uses: .
+        with:
+          accessToken: test-access-token
+          projKey: my-project
+          dockerImage: registry.example.com/mirror/ld-find-code-refs:custom
+          baseUri: https://ld.example.com
+          contextLines: "0"
+          allowTags: "true"
+          debug: "true"
+          ignoreServiceErrors: "true"
+          lookback: "0"
+          prune: "true"
+          subdirectory: src
+      - name: Assert custom image and inputs
+        run: |
+          echo "--- args ---"; cat /tmp/docker-args.txt
+          echo "--- env ---"; cat /tmp/docker-env.txt
+          fail=0
+          [ "$(tail -n1 /tmp/docker-args.txt)" = "registry.example.com/mirror/ld-find-code-refs:custom" ] || { echo "FAIL: custom image not used"; fail=1; }
+          for kv in LD_BASE_URI=https://ld.example.com LD_CONTEXT_LINES=0 LD_ALLOW_TAGS=true LD_DEBUG=true LD_IGNORE_SERVICE_ERRORS=true LD_LOOKBACK=0 LD_PRUNE=true LD_SUBDIRECTORY=src; do
+            grep -qx -- "$kv" /tmp/docker-env.txt || { echo "FAIL: expected $kv"; fail=1; }
+          done
+          if [ "$fail" -ne 0 ]; then exit 1; fi
+          echo "PASS"

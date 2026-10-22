@@ -1,0 +1,39 @@
+name: Test proxy env forwarding
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install fake docker CLI
+        run: |
+          mkdir -p /tmp/fakebin
+          cat > /tmp/fakebin/docker <<'EOF'
+          #!/bin/bash
+          printf '%s\n' "$@" > /tmp/docker-args.txt
+          echo "HTTPS_PROXY=${HTTPS_PROXY:-}" > /tmp/docker-env.txt
+          exit 0
+          EOF
+          chmod +x /tmp/fakebin/docker
+          echo "/tmp/fakebin" >> "$GITHUB_PATH"
+      - id: action
+        uses: .
+        env:
+          HTTPS_PROXY: http://proxy.example.com:3128
+        with:
+          accessToken: test-access-token
+          projKey: my-project
+      - name: Assert HTTPS_PROXY forwarded
+        run: |
+          cat /tmp/docker-args.txt
+          cat /tmp/docker-env.txt
+          if ! grep -qx "HTTPS_PROXY" /tmp/docker-args.txt; then
+            echo "FAIL: HTTPS_PROXY not forwarded via -e"
+            exit 1
+          fi
+          if ! grep -qx "HTTPS_PROXY=http://proxy.example.com:3128" /tmp/docker-env.txt; then
+            echo "FAIL: HTTPS_PROXY value not visible to docker"
+            exit 1
+          fi
+          echo "PASS"

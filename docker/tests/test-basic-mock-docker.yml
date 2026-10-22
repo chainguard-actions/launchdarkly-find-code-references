@@ -1,0 +1,57 @@
+name: Test basic usage with mocked docker
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install fake docker CLI
+        run: |
+          mkdir -p /tmp/fakebin
+          cat > /tmp/fakebin/docker <<'EOF'
+          #!/bin/bash
+          printf '%s\n' "$@" > /tmp/docker-args.txt
+          {
+            echo "LD_PROJ_KEY=${LD_PROJ_KEY:-}"
+            echo "LD_ACCESS_TOKEN=${LD_ACCESS_TOKEN:-}"
+            echo "LD_REPO_NAME=${LD_REPO_NAME:-}"
+            echo "LD_BASE_URI=${LD_BASE_URI:-}"
+            echo "LD_CONTEXT_LINES=${LD_CONTEXT_LINES:-}"
+            echo "LD_ALLOW_TAGS=${LD_ALLOW_TAGS:-}"
+            echo "LD_DEBUG=${LD_DEBUG:-}"
+            echo "LD_IGNORE_SERVICE_ERRORS=${LD_IGNORE_SERVICE_ERRORS:-}"
+            echo "LD_LOOKBACK=${LD_LOOKBACK:-}"
+            echo "LD_PRUNE=${LD_PRUNE:-}"
+          } > /tmp/docker-env.txt
+          exit 0
+          EOF
+          chmod +x /tmp/fakebin/docker
+          echo "/tmp/fakebin" >> "$GITHUB_PATH"
+      - id: action
+        uses: .
+        with:
+          accessToken: test-access-token
+          projKey: my-project
+          repoName: my-repo
+      - name: Assert docker run invocation
+        run: |
+          echo "--- args ---"; cat /tmp/docker-args.txt
+          echo "--- env ---"; cat /tmp/docker-env.txt
+          fail=0
+          [ "$(head -n1 /tmp/docker-args.txt)" = "run" ] || { echo "FAIL: first arg not 'run'"; fail=1; }
+          grep -qx -- "--rm" /tmp/docker-args.txt || { echo "FAIL: missing --rm"; fail=1; }
+          [ "$(tail -n1 /tmp/docker-args.txt)" = "launchdarkly/ld-find-code-refs-github-action:2.18.4" ] || { echo "FAIL: default image not last arg"; fail=1; }
+          for v in LD_PROJ_KEY LD_ACCESS_TOKEN LD_REPO_NAME GITHUB_TOKEN GITHUB_WORKSPACE GITHUB_EVENT_PATH; do
+            grep -qx -- "$v" /tmp/docker-args.txt || { echo "FAIL: $v not passed with -e"; fail=1; }
+          done
+          grep -qx "LD_PROJ_KEY=my-project" /tmp/docker-env.txt || { echo "FAIL: LD_PROJ_KEY"; fail=1; }
+          grep -qx "LD_ACCESS_TOKEN=test-access-token" /tmp/docker-env.txt || { echo "FAIL: LD_ACCESS_TOKEN"; fail=1; }
+          grep -qx "LD_REPO_NAME=my-repo" /tmp/docker-env.txt || { echo "FAIL: LD_REPO_NAME"; fail=1; }
+          grep -qx "LD_BASE_URI=https://app.launchdarkly.com" /tmp/docker-env.txt || { echo "FAIL: LD_BASE_URI default"; fail=1; }
+          grep -qx "LD_CONTEXT_LINES=2" /tmp/docker-env.txt || { echo "FAIL: LD_CONTEXT_LINES default"; fail=1; }
+          grep -qx "LD_LOOKBACK=10" /tmp/docker-env.txt || { echo "FAIL: LD_LOOKBACK default"; fail=1; }
+          grep -qx "LD_DEBUG=false" /tmp/docker-env.txt || { echo "FAIL: LD_DEBUG default"; fail=1; }
+          grep -qx "LD_PRUNE=false" /tmp/docker-env.txt || { echo "FAIL: LD_PRUNE default"; fail=1; }
+          if [ "$fail" -ne 0 ]; then exit 1; fi
+          echo "PASS"

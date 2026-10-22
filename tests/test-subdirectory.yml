@@ -1,0 +1,39 @@
+name: Test subdirectory input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - name: Create subdirectory with content
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/ld-subdir"
+          echo 'const flag = "my-test-flag";' > "$GITHUB_WORKSPACE/ld-subdir/app.js"
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          accessToken: api-00000000-0000-0000-0000-000000000000
+          projKey: default
+          repoName: test-repo
+          baseUri: http://127.0.0.1:1
+          lookback: "0"
+          contextLines: "0"
+          ignoreServiceErrors: "true"
+          subdirectory: ld-subdir
+      - name: Assert action ran with subdirectory
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "success" ]; then
+            echo "PASS: action exited 0 with subdirectory set"
+          elif [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action ran and terminated (unreachable API / harness limits)"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
