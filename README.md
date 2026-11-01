@@ -6,18 +6,18 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 
 ## Versions
 
-| Version | Tag | Upstream commit |
-|---------|-----|-----------------|
-| v2.11.10 | [`v2.11.10`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.11.10) | [`9121864`](https://github.com/launchdarkly/find-code-references/commit/9121864b38607df643329f286917af4700c039c4) |
-| v2.11.9 | [`v2.11.9`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.11.9) | [`7ad3e0b`](https://github.com/launchdarkly/find-code-references/commit/7ad3e0bc8e4b435f5347e67d4bd3e7a817a63c9d) |
-| v2.12.0 | [`v2.12.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.12.0) | — |
-| v2.13.0 | [`v2.13.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.13.0) | — |
-| v2.14.0 | [`v2.14.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.14.0) | — |
-| v2.16.0 | [`v2.16.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.16.0) | [`a68d7da`](https://github.com/launchdarkly/find-code-references/commit/a68d7da46aeffd66af43253b2d3619914508235b) |
-| v2.17.0 | [`v2.17.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.17.0) | [`088563c`](https://github.com/launchdarkly/find-code-references/commit/088563c86407b01ad1bc8d9594661b228ed4324d) |
-| v2.18.0 | [`v2.18.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.18.0) | [`3f78215`](https://github.com/launchdarkly/find-code-references/commit/3f782158d0ee6aec19291b232147e2f6c714f9ee) |
-| v2.18.3 | [`v2.18.3`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.18.3) | [`5d95481`](https://github.com/launchdarkly/find-code-references/commit/5d95481114aab85ab56671002d11218cfc7f9b23) |
-| v2.18.4 | [`v2.18.4`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.18.4) | [`a0de746`](https://github.com/launchdarkly/find-code-references/commit/a0de74620aaebcec8f2bcdac36d8122e46be8b11) |
+| Version | Tag | Upstream commit | Hardening report |
+|---------|-----|-----------------|------------------|
+| v2.11.10 | [`v2.11.10`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.11.10) | [`9121864`](https://github.com/launchdarkly/find-code-references/commit/9121864b38607df643329f286917af4700c039c4) | — |
+| v2.11.9 | [`v2.11.9`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.11.9) | [`7ad3e0b`](https://github.com/launchdarkly/find-code-references/commit/7ad3e0bc8e4b435f5347e67d4bd3e7a817a63c9d) | — |
+| v2.12.0 | [`v2.12.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.12.0) | — | — |
+| v2.13.0 | [`v2.13.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.13.0) | — | — |
+| v2.14.0 | [`v2.14.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.14.0) | — | — |
+| v2.16.0 | [`v2.16.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.16.0) | [`a68d7da`](https://github.com/launchdarkly/find-code-references/commit/a68d7da46aeffd66af43253b2d3619914508235b) | [`HARDENING.md`](https://github.com/chainguard-actions/launchdarkly-find-code-references/blob/v2.16.0/HARDENING.md) |
+| v2.17.0 | [`v2.17.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.17.0) | [`088563c`](https://github.com/launchdarkly/find-code-references/commit/088563c86407b01ad1bc8d9594661b228ed4324d) | [`HARDENING.md`](https://github.com/chainguard-actions/launchdarkly-find-code-references/blob/v2.17.0/HARDENING.md), [`docker`](https://github.com/chainguard-actions/launchdarkly-find-code-references/blob/v2.17.0/docker/HARDENING.md) |
+| v2.18.0 | [`v2.18.0`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.18.0) | [`3f78215`](https://github.com/launchdarkly/find-code-references/commit/3f782158d0ee6aec19291b232147e2f6c714f9ee) | [`HARDENING.md`](https://github.com/chainguard-actions/launchdarkly-find-code-references/blob/v2.18.0/HARDENING.md), [`docker`](https://github.com/chainguard-actions/launchdarkly-find-code-references/blob/v2.18.0/docker/HARDENING.md) |
+| v2.18.3 | [`v2.18.3`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.18.3) | [`5d95481`](https://github.com/launchdarkly/find-code-references/commit/5d95481114aab85ab56671002d11218cfc7f9b23) | [`HARDENING.md`](https://github.com/chainguard-actions/launchdarkly-find-code-references/blob/v2.18.3/HARDENING.md), [`docker`](https://github.com/chainguard-actions/launchdarkly-find-code-references/blob/v2.18.3/docker/HARDENING.md) |
+| v2.18.4 | [`v2.18.4`](https://github.com/chainguard-actions/launchdarkly-find-code-references/tree/v2.18.4) | [`a0de746`](https://github.com/launchdarkly/find-code-references/commit/a0de74620aaebcec8f2bcdac36d8122e46be8b11) | [`HARDENING.md`](https://github.com/chainguard-actions/launchdarkly-find-code-references/blob/v2.18.4/HARDENING.md), [`docker`](https://github.com/chainguard-actions/launchdarkly-find-code-references/blob/v2.18.4/docker/HARDENING.md) |
 
 ## Privacy
 
